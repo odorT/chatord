@@ -1,10 +1,19 @@
 from panes import *
 from settings import *
+import locale
 
 
 class TUI:
     def __init__(self, nickname) -> None:
         self.stdscr = curses.initscr()
+
+        self.stdscr.keypad(True)
+        curses.noecho()
+        curses.cbreak()
+        locale.setlocale(locale.LC_ALL, '')
+        code = locale.getpreferredencoding()
+        # TODO: place all configurations like above to an appropriate place
+
         self.lines = curses.LINES
         self.cols = curses.COLS
 
@@ -41,7 +50,8 @@ class TUI:
 
     def check_terminal_size(self) -> None:
         if self.cols < min_cols or self.lines < min_lines:
-            raise SystemExit("Error: Terminal size must be equal or more than 110x15. Terminating program")
+            raise SystemExit(f"Error: Terminal size must be equal or more than {min_cols}x{min_lines}. Terminating "
+                             f"program")
 
     @staticmethod
     def sleep(seconds):

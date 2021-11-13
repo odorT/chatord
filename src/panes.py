@@ -1,4 +1,6 @@
 import curses
+import curses.ascii
+
 from nltk import flatten
 
 
@@ -72,7 +74,6 @@ class LogPane(OutputPane):
             pass
 
         self.refresh_window()
-
         self.add_to_messages(message)
 
         count = 1
@@ -91,8 +92,42 @@ class LogPane(OutputPane):
 
 
 class CommandPane(InputPane):
+
     def __init__(self, size_y, size_x, pos_y, pos_x) -> None:
         super().__init__(size_y, size_x, pos_y, pos_x)
+        self.prompt = '$ '
+        self.max_textsize = self.max_textsize - 2  # max_textsize will be less by the prompt size
+        # TODO: apply the same technique above to all classes
+
+        self.commands = []
+
+    def add_to_previous_commands(self, command):
+        self.commands.append(command)
+
+    def stdin(self):
+        self.window.addstr(1, 1, self.prompt)
+
+        input_text = ''
+        while True:
+            self.window.addstr(1, 3, input_text)
+            self.window.clrtoeol()
+            char = self.window.get_wch()
+
+            if isinstance(char, str) and char.isprintable():
+                if len(input_text) + 1 < self.max_textsize:
+                    input_text += char
+                else:
+                    continue
+            elif char == '\x7f':  # backspace
+                input_text = input_text[:-1]
+            elif char == '\n':  # return
+                # TODO: clear command pane
+                return input_text
+            # TODO: create method for getting previous commands when up arrow is pressed
+            # elif char == curses.KEY_UP:
+            #     raise SystemExit('pressed up)
+            else:
+                raise AssertionError(repr(char))
 
 
 class MessagePane(InputPane):
