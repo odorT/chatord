@@ -15,6 +15,8 @@ class Pane:
         self.window = curses.newwin(self.size_y, self.size_x, self.pos_y, self.pos_x)
         self.window.border()
         self.refresh_window()
+        self.window.keypad(True)
+        # TODO: place config above to appropriate place
 
     def refresh_window(self):
         self.window.refresh()
@@ -23,6 +25,15 @@ class Pane:
 class InputPane(Pane):
     def stdin(self):
         pass
+
+    def show_text(self, text=''):
+        pass
+
+    def refresh_window(self):
+        self.window.clear()
+        self.window.border()
+        self.show_text()
+        self.window.refresh()
 
 
 class OutputPane(Pane):
@@ -92,25 +103,22 @@ class LogPane(OutputPane):
 
 
 class CommandPane(InputPane):
+    # TODO: implement reverse command search, when up arrow pressed show previous commands
 
     def __init__(self, size_y, size_x, pos_y, pos_x) -> None:
         super().__init__(size_y, size_x, pos_y, pos_x)
-        self.prompt = '$ '
         self.max_textsize = self.max_textsize - 2  # max_textsize will be less by the prompt size
         # TODO: apply the same technique above to all classes
 
-        self.commands = []
-
-    def add_to_previous_commands(self, command):
-        self.commands.append(command)
+    def show_text(self, text=''):
+        text = f'$ {text}'
+        self.window.addstr(1, 1, text)
+        self.window.clrtoeol()
 
     def stdin(self):
-        self.window.addstr(1, 1, self.prompt)
-
         input_text = ''
         while True:
-            self.window.addstr(1, 3, input_text)
-            self.window.clrtoeol()
+            self.show_text(input_text)
             char = self.window.get_wch()
 
             if isinstance(char, str) and char.isprintable():
@@ -118,18 +126,36 @@ class CommandPane(InputPane):
                     input_text += char
                 else:
                     continue
-            elif char == '\x7f':  # backspace
+            elif char == '\x7f' or char == 263:  # backspace
                 input_text = input_text[:-1]
             elif char == '\n':  # return
-                # TODO: clear command pane
+                self.refresh_window()
                 return input_text
-            # TODO: create method for getting previous commands when up arrow is pressed
-            # elif char == curses.KEY_UP:
-            #     raise SystemExit('pressed up)
             else:
-                raise AssertionError(repr(char))
+                raise AssertionError(char)
 
 
 class MessagePane(InputPane):
     def __init__(self, size_y, size_x, pos_y, pos_x) -> None:
         super().__init__(size_y, size_x, pos_y, pos_x)
+
+    def show_text(self, text=''):
+        text = f'>> {text}'
+        self.window.addstr(1, 1, text)
+        self.window.clrtoeol()
+
+    def stdin(self):
+        input_text = ''
+        while True:
+            self.show_text(input_text)
+            char = self.window.get_wch()
+
+            if isinstance(input_text, str) and char.isprintable():
+                input_text += char
+            elif char == '\x7f' or char == 263:  # backspace
+                input_text = input_text[:-1]
+            elif char == '\n':  # return
+                self.refresh_window()
+                return input_text
+            else:
+                raise AssertionError(char)

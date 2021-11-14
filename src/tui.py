@@ -7,7 +7,6 @@ class TUI:
     def __init__(self, nickname) -> None:
         self.stdscr = curses.initscr()
 
-        self.stdscr.keypad(True)
         curses.noecho()
         curses.cbreak()
         locale.setlocale(locale.LC_ALL, '')

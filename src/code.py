@@ -43,6 +43,7 @@ while True:
 
     text = tui.command_pane.stdin()
     tui.log_pane.stdout(message=text)
-    tui.log_pane.stdout(tui.command_pane.max_textsize)
-    tui.sleep(3)
+    text2 = tui.message_pane.stdin()
+    tui.log_pane.stdout(message=text2)
+    tui.sleep(1)
     break
