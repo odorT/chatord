@@ -25,6 +25,38 @@ services:
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
       MYSQL_ROOT_HOST: '${MYSQL_ROOT_HOST}'
+    cap_add:
+      - SYS_NICE
+
+  app:
+    image: chatord
+    build:
+      context: src/server/
+      dockerfile: Dockerfile
+    container_name: chatord
+    networks:
+      - app-network
+    ports:
+      - '80:5000'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '512M'
+        reservations:
+          memory: '256M'
+    environment:
+      APP_VERSION: '${APP_VERSION}'
+      FLASK_SECRET_KEY: '${FLASK_SECRET_KEY}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_ROOT_HOST: '${MYSQL_ROOT_HOST}'
+    depends_on:
+      - mysql
 
 volumes:
   mysql-data:
