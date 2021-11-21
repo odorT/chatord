@@ -1,5 +1,3 @@
-import curses
-
 from tui import TUI
 import time
 
