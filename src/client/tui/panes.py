@@ -121,7 +121,9 @@ class CommandPane(InputPane):
             self.show_text(input_text)
             char = self.window.get_wch()
 
-            if isinstance(char, str) and char.isprintable():
+            if char == '`':  # key for switching panes
+                return self
+            elif isinstance(char, str) and char.isprintable():
                 if len(input_text) + 1 < self.max_textsize:
                     input_text += char
                 else:
@@ -156,7 +158,9 @@ class MessagePane(InputPane):
             self.show_text(input_text)
             char = self.window.get_wch()
 
-            if isinstance(input_text, str) and char.isprintable():
+            if char == '`':  # key for switching panes
+                return self
+            elif isinstance(input_text, str) and char.isprintable():
                 input_text += char
             elif char == '\x7f' or char == 263:  # backspace
                 input_text = input_text[:-1]
