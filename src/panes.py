@@ -107,7 +107,7 @@ class CommandPane(InputPane):
 
     def __init__(self, size_y, size_x, pos_y, pos_x) -> None:
         super().__init__(size_y, size_x, pos_y, pos_x)
-        self.max_textsize = self.max_textsize - 2  # max_textsize will be less by the prompt size
+        self.max_textsize = self.max_textsize - 1  # max_textsize will be less by the prompt size
         # TODO: apply the same technique above to all classes
 
     def show_text(self, text=''):
@@ -141,8 +141,14 @@ class MessagePane(InputPane):
 
     def show_text(self, text=''):
         text = f'>> {text}'
-        self.window.addstr(1, 1, text)
-        self.window.clrtoeol()
+        if len(text) < self.max_textsize:
+            self.window.addstr(1, 1, text)
+            self.window.clrtoeol()
+        else:
+            text = [text[x:x + self.max_textsize] for x in range(0, len(text), self.max_textsize)]
+            for line_count, text_slice in enumerate(text, start=1):
+                if line_count < self.size_y - 1:
+                    self.window.addstr(line_count, 1, text_slice)
 
     def stdin(self):
         input_text = ''
