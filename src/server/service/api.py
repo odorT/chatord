@@ -11,9 +11,9 @@ APP_VERSION = os.environ['APP_VERSION']
 FLASK_SECRET_KEY = os.environ['FLASK_SECRET_KEY']
 MYSQL_USER = os.environ['MYSQL_USER']
 MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
-MYSQL_ROOT_HOST = os.environ['MYSQL_ROOT_HOST']
+MYSQL_HOST = 'mysql-db'
 MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
-MYSQL_URI = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_ROOT_HOST}/{MYSQL_DATABASE}"
+MYSQL_URI = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DATABASE}"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
@@ -85,7 +85,9 @@ def new_user():
     return (
         jsonify({'username': user.username}),
         201,
-        {'Location': url_for('get_user', id=user.id, _external=True)}
+        {
+            'Location': url_for('get_user', id=user.id, _external=True)
+        }
     )
 
 
