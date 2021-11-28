@@ -58,7 +58,7 @@ services:
     networks:
       - app-network
     ports:
-      - '80:5000'
+      - '81:5000'
     deploy:
       restart_policy:
         condition: on-failure

@@ -1,9 +1,9 @@
 import requests
 
 # url = 'http://127.0.0.1:5000/api/v1'
-url = 'http://localhost/api/v1'
+url = 'http://192.168.79.128:81/api/v1'
 
-data = {"username": "kamran5", "password": "kamran"}
+data = {"username": "rustam15", "password": "rustam"}
 
 r = requests.post(url=f'{url}/register', json=data)
 
