@@ -14,3 +14,4 @@ docker-compose up
 
 API is exposed at: localhost:80  
 MYSQL is exposed at: localhost:3306  
+REDIS is exposed at: localhost:6379

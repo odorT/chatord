@@ -50,7 +50,7 @@ services:
       REDIS_PASSWORD: '${REDIS_PASSWORD}'
 
   app:
-    image: chatord
+    image: chatord:${APP_VERSION}
     build:
       context: src/server/
       dockerfile: Dockerfile
