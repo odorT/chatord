@@ -2,8 +2,7 @@ import requests
 
 
 def abort(msg='Something went wrong, exiting ...'):
-    print(msg)
-    exit(105)
+    return msg
 
 
 class Connection:
@@ -25,7 +24,7 @@ class Connection:
         except:
             abort('Could not connect to server, please check the network connection.')
 
-    def register_user(self, username, password):
+    def register(self, username, password):
         payload = {'username': username, 'password': password}
 
         res = requests.post(
@@ -34,15 +33,14 @@ class Connection:
         )
 
         if res.status_code == 201:
-            print(f'User {username} created successfully.')
+            return f'User {username} created successfully.'
         elif res.status_code == 400:
-            print(f'User {username} already exists.')
-            abort()
+            return f'User {username} already exists.'
         else:
-            abort('Failed in register_user method')
+            return 'Failed in register_user method'
 
     def login(self, username, password, conn_details):
-        payload = {'username': username, 'password': password, 'conn_details': conn_details}
+        payload = {'username': username, 'password': password, 'conn_details': str(conn_details)}
 
         res = requests.post(
             url=self.user_endpoint,
@@ -50,13 +48,12 @@ class Connection:
         )
 
         if res.status_code == 200:
-            print('Login successful.')
             self.auth_token = res.json()['access_token']
+            return 'Login successful.'
         elif res.status_code == 401:
-            print('Wrong username or password.')
-            abort()
+            return 'Wrong username or password.'
         else:
-            abort('Failed in login method')
+            return 'Failed in login method'
 
     def logout(self):
         headers = {'Authorization': f'Bearer {self.auth_token}'}
@@ -67,13 +64,12 @@ class Connection:
         )
 
         if res.status_code == 200:
-            print('Logged out successfully.')
             self.auth_token = ''
+            return 'Logged out successfully.'
         elif res.status_code == 401 or res.status_code == 422:
-            print(res.text)
-            abort()
+            return res.json()['msg']
         else:
-            abort('Failed in logout method')
+            return 'Failed in logout method'
 
     def get_all_users(self):
         headers = {'Authorization': f'Bearer {self.auth_token}'}
@@ -86,10 +82,19 @@ class Connection:
         if res.status_code == 200:
             self.user_details = res.json()
         elif res.status_code == 401 or res.status_code == 422:
-            print(res.text)
-            abort()
+            return res.json()['msg']
         else:
-            abort('Failed in get_all_users method')
+            return 'Failed in get_all_users method'
 
         return self.user_details
+
+    def get_user_by_conn(self, address: tuple):
+        users = self.get_all_users()
+        host, port = address
+
+        for username, conn in users:
+            if conn['host'] == host and conn['port'] == port:
+                return username
+
+        return None
 
