@@ -52,10 +52,11 @@ services:
       - mysql
 
   app:
-    image: chatord:${APP_VERSION}
-    build:
-      context: src/server/
-      dockerfile: Dockerfile
+#    image: chatord:${APP_VERSION}
+#    build:
+#      context: src/server/
+#      dockerfile: Dockerfile
+    image: odort/chatord:v1
     container_name: chatord
     networks:
       - app-network
