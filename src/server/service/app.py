@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
 from user_resource import User, UserRegister
+from health_resource import Health
 from settings import *
 
 
@@ -27,6 +28,7 @@ def create_tables():
 
 api.add_resource(User, f'{CONTEXT_PATH}/user')
 api.add_resource(UserRegister, f'{CONTEXT_PATH}/register')
+api.add_resource(Health, f'{CONTEXT_PATH}/actuator/health')
 
 
 if __name__ == '__main__':
