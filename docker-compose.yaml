@@ -48,6 +48,8 @@ services:
           memory: '256M'
     environment:
       REDIS_PASSWORD: '${REDIS_PASSWORD}'
+    depends_on:
+      - mysql
 
   app:
     image: chatord:${APP_VERSION}
