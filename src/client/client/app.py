@@ -1,6 +1,7 @@
 from settings import *
 
 
+
 def output(msg):
     print(msg)
 
@@ -33,8 +34,8 @@ def help():
     /login username password     - to login
     /logout                      - to logout
     /users                       - to get all users
-    /connect username            - start to chat with user
     /disconnect username         - stop to chat with user
+    /connect username            - start to chat with user
     /help                        - help
     """)
 
