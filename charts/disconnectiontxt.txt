@@ -1,0 +1,6 @@
+title Disconnection
+
+Client1->Server: Disconnect request
+
+Server->Redis: Updates Client status to offline
+

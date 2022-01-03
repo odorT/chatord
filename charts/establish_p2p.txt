@@ -1,0 +1,18 @@
+title Establish Peer to Peer connection
+
+
+Client1->Server: Show clients
+
+Server->Redis: Get online clients
+
+Server->Database: Get all clients
+
+Server->Client1: List of clients
+
+Client1->Server: Get temporary session token for \nclient-to-client communication 
+
+Client1->Client2: Wants to send message, message, temporary session token
+
+Client2-> Server: Checks received temporary token, if **successfull**, accept connection, else discard
+
+Client2->Client1: Accept connection, start session

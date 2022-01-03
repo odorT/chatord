@@ -1,0 +1,15 @@
+title Login
+
+Client->Server: sends **username**, **password**, connection
+
+Server->3rd party API CALL: checks client address for \npotential danger, ddos, any other attack vectors
+
+Server->Database: Checks username and password in database
+
+Server->Client: **success** or failure message
+
+Server->Redis: Saves client connection details in Redis
+
+Server->Client: sends session token
+
+Server->Redis: Updates Client status to online

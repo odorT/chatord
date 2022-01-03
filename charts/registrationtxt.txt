@@ -1,0 +1,9 @@
+title Registration
+
+Client->Server: sends **username**, **password** for registration, connection
+
+Server->3rd party API CALL: checks client address for \npotential danger, ddos, any other attack vectors
+
+Server->Database: Checks for duplicate username in database,\nif the same username exists, sends exception \nto client, otherwise creates new user and sends **success** message to client
+
+Server->Client: **success** or failure message
